@@ -47,7 +47,13 @@ public class Server {
 
                 // calling start method to start the client handler
                 thread.start();
+
+                // Exception handling
             } catch (Exception e) {
+                // Close socket
+                sock.close();
+                // Print stack trace for this throwable object on the error output stream
+                e.printStackTrace();
 
             }
         }
