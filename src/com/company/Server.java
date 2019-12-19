@@ -3,62 +3,54 @@ package com.company;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Scanner;
 
-public class Server {
+//Server class
+//
+//
+public class Server
+{   // There are no class variables declared
+    //
+    public static void main(String[] args) throws IOException
+    {
 
-    public static void main(String[] args) throws IOException {
 
-        // Variables
-        String playerName;
-        String player1;
-        String player2;
+        ServerSocket ss = new ServerSocket(7890);
 
-        // Server socket to specify port number '7890'
-        ServerSocket servSock = new ServerSocket(7890);
+        // running infinite loop to wait for client request
+        // Request will be either to supply the date or current time
+        //
+        while (true) //infinite while loop
+        {
+            Socket s = null; //Declare a variable s of type socket and set it to null
 
-        // While loop waiting for client connection request
-        while (true) {
+            try
+            {
+                // socket object to receive incoming client requests
+                s = ss.accept();
 
-            // Declaring socket variable and assigning it to null
-            Socket sock = null;
+                System.out.println("A new client is connected : " + s);
 
-            try {
-                // Accept incoming request from client
-                sock = servSock.accept();
-                System.out.println("A new player has joined : " + sock);
+                // obtaining input and out streams
+                DataInputStream dis = new DataInputStream(s.getInputStream());
+                DataOutputStream dos = new DataOutputStream(s.getOutputStream());
 
-                /*
-                // Accepting user name passing from client
-                Scanner scan = new Scanner(sock.getInputStream());
-                 */
+                System.out.println("Assigning new thread for this client");
 
-                // Setting data input and output streams
-                DataInputStream dataIn = new DataInputStream(sock.getInputStream());
-                DataOutputStream dataOut = new DataOutputStream(sock.getOutputStream());
+                // create a new thread object
+                Thread t = new ClientHandler(s, dis, dos); //declare a new thread t of type ClientHandler
 
-                System.out.println("Assigning new thread");
+                // Invoking the start() method
+                t.start(); //Start the client handler
 
-                // Creating new thread as new 'thread' of type clientHandler
-                Thread thread = new ClientHandler(sock, dataIn, dataOut);
+                System.out.println("Thread complete");
 
-                // calling start method to start the client handler
-                thread.start();
-
-                // Exception handling
-            } catch (Exception e) {
-                // Close socket
-                sock.close();
-                // Print stack trace for this throwable object on the error output stream
+            } // End try part
+            catch (Exception e){
+                s.close();
                 e.printStackTrace();
-
-            }
-        }
-
-    }
-
-}
-
+            } // End catch
+        } // End while
+    } // End Main
+} // End Server Class
