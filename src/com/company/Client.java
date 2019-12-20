@@ -2,31 +2,22 @@ package com.company;
 
 import jdk.swing.interop.SwingInterOpUtils;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
 
 //Client class
-public class Client extends Player
+public class Client
 {
-    // No class variables
-    //
-
-
-    public Client(String playerFirstName, String playerSurname, int playerAge, int playerScore) {
-        super(playerFirstName, playerSurname, playerAge, playerScore);
-    }
-
-
+    // Test for object output
+    // private static Object FileOutputStream;
 
     public static void main(String[] args) throws IOException
 
     {
-
+        // Variables
         String firstName;
         String surname;
         String tempAge;
@@ -34,69 +25,82 @@ public class Client extends Player
         int score = 0;
         boolean bool = true;
 
+        // Dom parser object
+        domParser dom = new domParser();
+
         try
         {
             Scanner scn = new Scanner(System.in);
 
-            // getting localhost ip
+            // Getting localhost ip
             InetAddress ip = InetAddress.getByName("localhost");
 
-            // establish the connection with server port 5056
+            // Socket for connection on port
             Socket s = new Socket(ip, 7890);
 
-            // obtaining input and out streams
+            // Data input and output Streams
             DataInputStream dis = new DataInputStream(s.getInputStream());
             DataOutputStream dos = new DataOutputStream(s.getOutputStream());
 
-            // the following loop performs the exchange of
-            // information between client and client handler
-            while (bool)
-            {
+
+                // In
                 System.out.println(dis.readUTF());
                 String toSend = scn.nextLine();
+                //Out
                 dos.writeUTF(toSend);
-
                 firstName = toSend;
-                System.out.println("Your first name is: " + firstName);
-                Thread.sleep(1000);
 
+
+                //   TRYING TO FIGURE OUT LOOP FOR VALIDATION///////////////////////////
+                if (toSend.matches("[a-zA-Z]*")) {
+
+                }
+                    System.out.println("Your surname is: " + firstName.substring(0, 1).toUpperCase() + firstName.substring(1));
+                    Thread.sleep(1000);
+                    System.out.println("First name must be letters only");
+            //   TRYING TO FIGURE OUT LOOP FOR VALIDATION ////////////////////////////
+
+
+                //In
                 System.out.println(dis.readUTF());
                 toSend = scn.nextLine();
+                //Out
                 dos.writeUTF(toSend);
-
                 surname = toSend;
-                System.out.println("Your surname is: " + surname);
+                System.out.println("Your surname is: " + surname.substring(0,1).toUpperCase() + surname.substring(1));
                 Thread.sleep(1000);
 
+                // In
                 System.out.println(dis.readUTF());
                 toSend = scn.nextLine();
+                //Out
                 dos.writeUTF(toSend);
-
                 tempAge = toSend;
                 age = Integer.parseInt(tempAge);
                 System.out.println("your age is " + age);
                 Thread.sleep(1000);
 
+                // New object for player
                 Player newPlayer = new Player(firstName, surname, age, 0);
-
                 newPlayer.greetPlayer();
+                Thread.sleep(2000);
 
-                bool = false;
 
-                break;
 
-            } // End while
 
+             // End while
+
+            // In
             System.out.println(dis.readUTF());
-            String answer = scn.nextLine();
-            dos.writeUTF(answer);
-            if(answer.equals("1")){
-                score = score + 1;
-                System.out.println("Your score is: " + score);
+            String enterKey = scn.nextLine();
+            // Out
+            dos.writeUTF(enterKey);
+            // Read XML script once user presses enter
+            if(enterKey.equals("")){
+                dom.parseXml();
             }
-            else{
-                System.out.println("next question");
-            }
+
+
 
             // closing resources
         }catch(Exception e){

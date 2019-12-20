@@ -10,45 +10,48 @@ import java.net.Socket;
 //
 //
 public class Server
-{   // There are no class variables declared
-    //
+{
+    // Dom parser for testing
+    // domParser dom = new domParser();
+
     public static void main(String[] args) throws IOException
     {
 
+        // Test variable
+        // int playerNum = 1;
 
-        ServerSocket ss = new ServerSocket(7890);
+        // Server socket assigning port number
+        ServerSocket servSock = new ServerSocket(7890);
 
-        // running infinite loop to wait for client request
-        // Request will be either to supply the date or current time
-        //
-        while (true) //infinite while loop
+        //While loop waiting for client requests (User connects)
+        while (true)
         {
-            Socket s = null; //Declare a variable s of type socket and set it to null
+            Socket sock = null; //Declare variable s of type socket and set it to null
 
             try
             {
                 // socket object to receive incoming client requests
-                s = ss.accept();
+                sock = servSock.accept();
 
-                System.out.println("A new client is connected : " + s);
+                System.out.println("A new client is connected : " + sock);
 
-                // obtaining input and out streams
-                DataInputStream dis = new DataInputStream(s.getInputStream());
-                DataOutputStream dos = new DataOutputStream(s.getOutputStream());
+                // Data input and output streams
+                DataInputStream dis = new DataInputStream(sock.getInputStream());
+                DataOutputStream dos = new DataOutputStream(sock.getOutputStream());
 
                 System.out.println("Assigning new thread for this client");
 
-                // create a new thread object
-                Thread t = new ClientHandler(s, dis, dos); //declare a new thread t of type ClientHandler
+                // Create a new thread object
+                Thread t = new ClientHandler(sock, dis, dos); //declare a new thread t of type ClientHandler
 
-                // Invoking the start() method
-                t.start(); //Start the client handler
+                // Starting the client handler
+                t.start();
 
                 System.out.println("Thread complete");
 
-            } // End try part
+            } // End try
             catch (Exception e){
-                s.close();
+                sock.close();
                 e.printStackTrace();
             } // End catch
         } // End while

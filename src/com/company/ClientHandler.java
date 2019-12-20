@@ -1,8 +1,6 @@
 package com.company;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -15,6 +13,7 @@ class ClientHandler extends Thread
     final DataInputStream dis; //Declare dis as DataInputStream
     final DataOutputStream dos; //Declare dos as DataOutputStream
     final Socket s; //Declare s as a Socket
+    private Object FileOutputStream;
 
 
     // Constructor
@@ -30,8 +29,9 @@ class ClientHandler extends Thread
     {
         //Declare two strings for receive and return information
         String received;
-        String toreturn;
+        String toReturn;
         int intReceived;
+
 
         //Infinite loop setup
         //
@@ -39,30 +39,34 @@ class ClientHandler extends Thread
         {
             try {
 
-                // Ask user what he wants
 
-                dos.writeUTF("---------------------------------------------------\nPlease enter your first name: ");
+                while(true) {
+                    // Ask for user First Name
+                    dos.writeUTF("---------------------------------------------------\nPlease enter your First Name: ");
 
-                // receive the answer from client
+                    break;
+                }
+
+                // Receive the answer from client
                 received = dis.readUTF();
 
+                // Ask for user Surname
+                dos.writeUTF("---------------------------------------------------\nPlease enter your Surname; ");
 
-                dos.writeUTF("---------------------------------------------------\nPlease enter your surname; ");
-
-                // receive the answer from client
+                // Receive the answer from client
                 received = dis.readUTF();
 
-                dos.writeUTF("---------------------------------------------------\nPlease enter your age; ");
+                // Ask for user Age
+                dos.writeUTF("---------------------------------------------------\nPlease enter your Age; ");
 
-                // receive the answer from client
+                // Receive the answer from client
                 received = dis.readUTF();
 
-                dos.writeUTF("---------------------------------------------------\n1: Right\n2: Wrong; ");
+                // Press enter to start quiz
+                dos.writeUTF("---------------------------------------------------\nPress enter to start quiz; ");
 
-                // receive the answer from client
+                // Receive the answer from client
                 received = dis.readUTF();
-
-
 
 
             } catch (IOException e) {

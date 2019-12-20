@@ -56,12 +56,8 @@ public class Player extends Thread {
 
 
     public void greetPlayer(){
-        System.out.println("Welcome " + playerFirstName + " " + playerSurname);
-    }
-
-
-    public void newPlayer(){
-
+        System.out.println("------------------------------------------------------------\nWelcome " +
+                playerFirstName.substring(0,1).toUpperCase() + playerFirstName.substring(1) + " " + playerSurname.substring(0,1).toUpperCase() + playerSurname.substring(1) + "!");
     }
 
 
