@@ -25,8 +25,6 @@ public class Client
         int score = 0;
         boolean bool = true;
 
-        // Dom parser object
-        domParser dom = new domParser();
 
         try
         {
@@ -43,52 +41,52 @@ public class Client
             DataOutputStream dos = new DataOutputStream(s.getOutputStream());
 
 
-                // In
-                System.out.println(dis.readUTF());
-                String toSend = scn.nextLine();
-                //Out
-                dos.writeUTF(toSend);
-                firstName = toSend;
+            // In
+            System.out.println(dis.readUTF());
+            String toSend = scn.nextLine();
+            //Out
+            dos.writeUTF(toSend);
+            firstName = toSend;
 
 
-                //   TRYING TO FIGURE OUT LOOP FOR VALIDATION///////////////////////////
-                if (toSend.matches("[a-zA-Z]*")) {
+            //   TRYING TO FIGURE OUT LOOP FOR VALIDATION///////////////////////////
+            if (toSend.matches("[a-zA-Z]*")) {
 
-                }
-                    System.out.println("Your surname is: " + firstName.substring(0, 1).toUpperCase() + firstName.substring(1));
-                    Thread.sleep(1000);
-                    System.out.println("First name must be letters only");
+            }
+            System.out.println("Your surname is: " + firstName.substring(0, 1).toUpperCase() + firstName.substring(1));
+            Thread.sleep(1000);
+            System.out.println("First name must be letters only");
             //   TRYING TO FIGURE OUT LOOP FOR VALIDATION ////////////////////////////
 
 
-                //In
-                System.out.println(dis.readUTF());
-                toSend = scn.nextLine();
-                //Out
-                dos.writeUTF(toSend);
-                surname = toSend;
-                System.out.println("Your surname is: " + surname.substring(0,1).toUpperCase() + surname.substring(1));
-                Thread.sleep(1000);
+            //In
+            System.out.println(dis.readUTF());
+            toSend = scn.nextLine();
+            //Out
+            dos.writeUTF(toSend);
+            surname = toSend;
+            System.out.println("Your surname is: " + surname.substring(0,1).toUpperCase() + surname.substring(1));
+            Thread.sleep(1000);
 
-                // In
-                System.out.println(dis.readUTF());
-                toSend = scn.nextLine();
-                //Out
-                dos.writeUTF(toSend);
-                tempAge = toSend;
-                age = Integer.parseInt(tempAge);
-                System.out.println("your age is " + age);
-                Thread.sleep(1000);
+            // In
+            System.out.println(dis.readUTF());
+            toSend = scn.nextLine();
+            //Out
+            dos.writeUTF(toSend);
+            tempAge = toSend;
+            age = Integer.parseInt(tempAge);
+            System.out.println("your age is " + age);
+            Thread.sleep(1000);
 
-                // New object for player
-                Player newPlayer = new Player(firstName, surname, age, 0);
-                newPlayer.greetPlayer();
-                Thread.sleep(2000);
-
-
+            // New object for player
+            Player newPlayer = new Player(firstName, surname, age, 0);
+            newPlayer.greetPlayer();
+            Thread.sleep(2000);
 
 
-             // End while
+
+
+            // End while
 
             // In
             System.out.println(dis.readUTF());
@@ -96,9 +94,6 @@ public class Client
             // Out
             dos.writeUTF(enterKey);
             // Read XML script once user presses enter
-            if(enterKey.equals("")){
-                dom.parseXml();
-            }
 
 
 

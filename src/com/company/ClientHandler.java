@@ -2,27 +2,31 @@ package com.company;
 
 import java.io.*;
 import java.net.Socket;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 //ClientHandler class
 class ClientHandler extends Thread
 {
     // Declare variables
-
+    private Socket sock;
+    private String firstName;
+    private String surname;
+    private String age;
+    private int gameScore;
+    private int playerNumber;
     final DataInputStream dis; //Declare dis as DataInputStream
     final DataOutputStream dos; //Declare dos as DataOutputStream
-    final Socket s; //Declare s as a Socket
-    private Object FileOutputStream;
 
 
     // Constructor
-    public ClientHandler(Socket s, DataInputStream dis, DataOutputStream dos)
+    public ClientHandler(Socket s, int counter, domParser)
     {
-        this.s = s;
-        this.dis = dis;
-        this.dos = dos;
-    }
+        sock = s;
+        playerNumber = counter;
+        this.gameScore = 0;
+
+        // NEED TO INCLUDE MAP
+
+        // NEED TO INCLUDE DATA INPUT AND OUTPUT STREAMS FOR COMMUNICATION
 
     @Override
     public void run()
@@ -76,10 +80,9 @@ class ClientHandler extends Thread
 
 
 
-            // closing resources
+        // closing resources
 
 
 
     }
 }
-

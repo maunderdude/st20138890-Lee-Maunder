@@ -14,29 +14,57 @@ import java.util.Scanner;
 
 public class domParser {
 
-    Scanner scan = new Scanner(System.in);
+    // Variables
+    private int numOfPlayers;
 
-    public static void main(String[] args) {
-
+    // Parse xml method to add questions
+    public domParser(String file){
+        parseXml(file);
     }
 
-    public void parseXml() {
 
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+
+
+    private void parseXml(String file) {
+
+
         try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc = builder.parse(".idea/question.xml");
             NodeList quesionList = doc.getElementsByTagName("Question");
+
+            numOfPlayers = Integer.parseInt(doc.getDocumentElement().getAttribute("Players"));
+
             for(int i = 0; i < quesionList.getLength(); i++){
                 Node q = quesionList.item(i);
+
+
                 if(q.getNodeType()== Node.ELEMENT_NODE){
-                    Element question = (Element) q;
-                    String questionNumber = question.getAttribute("id");
+                    Element eElement = (Element) q;
 
+                    int questionId = Integer.parseInt(eElement.getAttribute("id"));
+                    int answerId = Integer.parseInt(eElement.getAttribute("answerid"));
 
-                    System.out.println("Question " + questionNumber + ": ");
-                    System.out.println(question.getElementsByTagName("text").item(0).getTextContent());
-                    scan.nextInt();
+                    String text = eElement.getElementsByTagName("text").item(0).getTextContent();
+
+                    NodeList answer = eElement.getElementsByTagName("answers").item(0).getChildNodes();
+
+                    quizQuestions quizQuestions = new quizQuestions(questionId, answerId, text);
+
+                    for(int a = 0; a < answer.getLength(); a++ ){
+                        Node nod = answer.item(a);
+
+                        if(nod.getNodeType() == Node.ELEMENT_NODE){
+                            Element e = (Element) nod;
+
+                            int optionId = Integer.parseInt(e.getAttribute("id"));
+                            String option = e.getTextContent();
+
+                            quizQuestions.addOption(optionId, option);
+                        }
+                    }
+
                 }
             }
 
@@ -49,5 +77,8 @@ public class domParser {
         }
     }
 
+    public int getNumOfPlayers(){
+        return  numOfPlayers;
     }
 
+}

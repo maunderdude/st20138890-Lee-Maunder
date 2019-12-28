@@ -9,16 +9,20 @@ import java.net.Socket;
 //Server class
 //
 //
-public class Server
-{
-    // Dom parser for testing
-    // domParser dom = new domParser();
-
-    public static void main(String[] args) throws IOException
+public class Server{
+        public static void main(String[] args) throws IOException
     {
 
-        // Test variable
-        // int playerNum = 1;
+        // Creating new object
+        domParser domParser = new domParser("question.xml");
+
+        // Variables
+        int players = domParser.getNumOfPlayers();
+
+        System.out.println("Number of players: " + players);
+
+        // Creating new client handler object
+        ClientHandler[] playerThread = new ClientHandler(players);
 
         // Server socket assigning port number
         ServerSocket servSock = new ServerSocket(7890);
@@ -30,25 +34,25 @@ public class Server
 
             try
             {
-                // socket object to receive incoming client requests
-                sock = servSock.accept();
+                int connectionCounter = 0;
 
-                System.out.println("A new client is connected : " + sock);
+                System.out.println("Server has started");
+                while(true){
+                    // socket object to receive incoming client requests
+                    sock = servSock.accept();
+                    System.out.println("Player " + connectionCounter + " has joined the game");
 
-                // Data input and output streams
-                DataInputStream dis = new DataInputStream(sock.getInputStream());
-                DataOutputStream dos = new DataOutputStream(sock.getOutputStream());
+                    // Passing new thread
+                    playerThread[connectionCounter] = new ClientHandler(sock, connectionCounter,);
 
-                System.out.println("Assigning new thread for this client");
+                    // Incrementing connection counter b 1
+                    connectionCounter++;
 
-                // Create a new thread object
-                Thread t = new ClientHandler(sock, dis, dos); //declare a new thread t of type ClientHandler
-
-                // Starting the client handler
-                t.start();
-
-                System.out.println("Thread complete");
-
+                    // If connection counter equals players then break
+                    if (connectionCounter == players) {
+                        break;
+                    }
+                }
             } // End try
             catch (Exception e){
                 sock.close();
