@@ -1,105 +1,91 @@
 package com.company;
 
-import jdk.swing.interop.SwingInterOpUtils;
-
 import java.io.*;
-import java.net.InetAddress;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Scanner;
 
 //Client class
-public class Client
-{
-    // Test for object output
-    // private static Object FileOutputStream;
+public class Client {
 
-    public static void main(String[] args) throws IOException
+    // Variables
+    public String client = "";
+    public String server = "";
 
-    {
-        // Variables
-        String firstName;
-        String surname;
-        String tempAge;
-        int age;
-        int score = 0;
-        boolean bool = true;
-
-
-        try
-        {
-            Scanner scn = new Scanner(System.in);
-
-            // Getting localhost ip
-            InetAddress ip = InetAddress.getByName("localhost");
+    public void start() {
+        try {
 
             // Socket for connection on port
-            Socket s = new Socket(ip, 7890);
+            Socket s = new Socket("localhost", 7890);
 
             // Data input and output Streams
             DataInputStream dis = new DataInputStream(s.getInputStream());
             DataOutputStream dos = new DataOutputStream(s.getOutputStream());
+            BufferedReader buffRead = new BufferedReader(new InputStreamReader(System.in));
 
+            // While loop
+            // While (not) server variable equals "done" then loop
+            while (!server.equals("done")) {
+                // Assigning server variable to readUTF (in)
+                server = dis.readUTF();
 
-            // In
-            System.out.println(dis.readUTF());
-            String toSend = scn.nextLine();
-            //Out
-            dos.writeUTF(toSend);
-            firstName = toSend;
+                // If server variable equals "done" then break
+                if (server.equals("done")) {
+                    System.out.println("End of the questions.\n");
+                    break;
+                }
 
+                // If server variable equals "waiting" then print out message to player. continue.
+                if (server.equals("waiting")) {
+                    System.out.println("Please wait until all of the players have joined...\n");
+                    continue;
+                }
 
-            //   TRYING TO FIGURE OUT LOOP FOR VALIDATION///////////////////////////
-            if (toSend.matches("[a-zA-Z]*")) {
+                // Checking to see if server variable equals condition and then printing output to ask user for their details
+                if (server.equals("firstname")) {
+                    System.out.print("Welcome to the Game!\nPlease enter your first name: ");
+                } else if (server.equals("surname")) {
+                    System.out.print("Enter your surname: ");
+                } else if (server.equals("age")) {
+                    System.out.print("Enter your age: ");
+                    //
+                } else {
+                    // Else statement to output request answer from user
+                    System.out.println(server);
+                    System.out.print("Enter your answer: ");
+                }
 
+                client = readUserInput(buffRead);
+
+                dos.writeUTF(client);
+                dos.flush();
+
+                System.out.println();
             }
-            System.out.println("Your surname is: " + firstName.substring(0, 1).toUpperCase() + firstName.substring(1));
-            Thread.sleep(1000);
-            System.out.println("First name must be letters only");
-            //   TRYING TO FIGURE OUT LOOP FOR VALIDATION ////////////////////////////
+
+            server = dis.readUTF();
+
+            System.out.println(server);
+            System.out.println();
+
+            // Closing resources
+            dis.close();
+            dos.close();
+            s.close();
+
+        }catch (Exception e){
+            System.out.println(e);
+        }
+    }
+
+    private String readUserInput(BufferedReader in)throws IOException {
+        String input;
+        input = in.readLine();
+        return input;
+    }
+
+    // Start client
+    public static void main(String[] args) {
+        new Client().start();
+    }
+}
 
 
-            //In
-            System.out.println(dis.readUTF());
-            toSend = scn.nextLine();
-            //Out
-            dos.writeUTF(toSend);
-            surname = toSend;
-            System.out.println("Your surname is: " + surname.substring(0,1).toUpperCase() + surname.substring(1));
-            Thread.sleep(1000);
-
-            // In
-            System.out.println(dis.readUTF());
-            toSend = scn.nextLine();
-            //Out
-            dos.writeUTF(toSend);
-            tempAge = toSend;
-            age = Integer.parseInt(tempAge);
-            System.out.println("your age is " + age);
-            Thread.sleep(1000);
-
-            // New object for player
-            Player newPlayer = new Player(firstName, surname, age, 0);
-            newPlayer.greetPlayer();
-            Thread.sleep(2000);
-
-
-
-
-            // End while
-
-            // In
-            System.out.println(dis.readUTF());
-            String enterKey = scn.nextLine();
-            // Out
-            dos.writeUTF(enterKey);
-            // Read XML script once user presses enter
-
-
-
-            // closing resources
-        }catch(Exception e){
-            e.printStackTrace();
-        } // End try-catch
-    } // End main
-} // End Client Class

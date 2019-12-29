@@ -10,39 +10,43 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.util.Scanner;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class domParser {
 
     // Variables
     private int numOfPlayers;
+    private Map<Integer, quizQuestions> listOFQuestions;
 
     // Parse xml method to add questions
     public domParser(String file){
         parseXml(file);
     }
 
-
-
-
+    // Store xml file in map
     private void parseXml(String file) {
+        listOFQuestions = new TreeMap<>();
 
 
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse(".idea/question.xml");
-            NodeList quesionList = doc.getElementsByTagName("Question");
+            Document doc = builder.parse(".idea/question2.xml");
+            NodeList questionList = doc.getElementsByTagName("Question");
 
-            numOfPlayers = Integer.parseInt(doc.getDocumentElement().getAttribute("Players"));
+            // Assigning number of players to the "players tag" in xml
+            numOfPlayers = Integer.parseInt(doc.getDocumentElement().getAttribute("players"));
 
-            for(int i = 0; i < quesionList.getLength(); i++){
-                Node q = quesionList.item(i);
+            //
+            for(int i = 0; i < questionList.getLength(); i++){
+                Node q = questionList.item(i);
 
-
+                //
                 if(q.getNodeType()== Node.ELEMENT_NODE){
                     Element eElement = (Element) q;
 
+                    // Assigning variables to xml tags
                     int questionId = Integer.parseInt(eElement.getAttribute("id"));
                     int answerId = Integer.parseInt(eElement.getAttribute("answerid"));
 
@@ -80,5 +84,10 @@ public class domParser {
     public int getNumOfPlayers(){
         return  numOfPlayers;
     }
+
+    public Map<Integer, quizQuestions> getListOFQuestions() {
+        return listOFQuestions;
+    }
+
 
 }

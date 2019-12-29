@@ -5,15 +5,15 @@ import java.util.TreeMap;
 public class quizQuestions {
 
     // Variables
-    private int qId;
+    private int questionId;
     private int answerId;
     private String text;
 
     private TreeMap<Integer, String> options;
 
 // Constructor
-    public quizQuestions(int qId, int answerId, String text) {
-        this.qId = qId;
+    public quizQuestions(int questionId, int answerId, String text) {
+        this.questionId = questionId;
         this.answerId = answerId;
         this.text = text;
 
@@ -21,8 +21,8 @@ public class quizQuestions {
     }
 
     // Get ID method
-    public int getqId() {
-        return qId;
+    public int getQuestionId() {
+        return questionId;
     }
 
     // Get answer ID method
@@ -35,7 +35,10 @@ public class quizQuestions {
         return text;
     }
 
-
+    // Get options method
+    public TreeMap<Integer, String> getOptions() {
+        return options;
+    }
 
     // Add option method
     public void addOption(int id, String option) {

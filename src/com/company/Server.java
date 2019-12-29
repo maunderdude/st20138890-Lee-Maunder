@@ -1,10 +1,9 @@
 package com.company;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Map;
 
 //Server class
 //
@@ -13,16 +12,18 @@ public class Server{
         public static void main(String[] args) throws IOException
     {
 
-        // Creating new object
-        domParser domParser = new domParser("question.xml");
+        // Creating new object with xml file parameter
+        domParser dp = new domParser("question2.xml");
 
         // Variables
-        int players = domParser.getNumOfPlayers();
+        // Assigning map to dom parser object to get list of questions method
+        Map<Integer, quizQuestions> questions = dp.getListOFQuestions();
+        int players = dp.getNumOfPlayers();
 
         System.out.println("Number of players: " + players);
 
-        // Creating new client handler object
-        ClientHandler[] playerThread = new ClientHandler(players);
+        // Array for object to hold players
+        ClientHandler[] playerThread = new ClientHandler[players];
 
         // Server socket assigning port number
         ServerSocket servSock = new ServerSocket(7890);
@@ -43,9 +44,9 @@ public class Server{
                     System.out.println("Player " + connectionCounter + " has joined the game");
 
                     // Passing new thread
-                    playerThread[connectionCounter] = new ClientHandler(sock, connectionCounter,);
+                    playerThread[connectionCounter] = new ClientHandler(sock, connectionCounter, questions);
 
-                    // Incrementing connection counter b 1
+                    // Incrementing connection counter by 1
                     connectionCounter++;
 
                     // If connection counter equals players then break
