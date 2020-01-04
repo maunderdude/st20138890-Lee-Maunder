@@ -11,7 +11,7 @@ public class quizQuestions {
 
     private TreeMap<Integer, String> options;
 
-// Constructor
+    // Constructor
     public quizQuestions(int questionId, int answerId, String text) {
         this.questionId = questionId;
         this.answerId = answerId;
@@ -20,27 +20,27 @@ public class quizQuestions {
         options = new TreeMap<>();
     }
 
-    // Get ID method
+    // Return question Id
     public int getQuestionId() {
         return questionId;
     }
 
-    // Get answer ID method
+    // Return answer id
     public int getAnswerId() {
         return answerId;
     }
 
-    // Get text method
+    // Return text
     public String getText() {
         return text;
     }
 
-    // Get options method
+    // get answers
     public TreeMap<Integer, String> getOptions() {
         return options;
     }
 
-    // Add option method
+    // Add question
     public void addOption(int id, String option) {
         options.put(id, option);
     }

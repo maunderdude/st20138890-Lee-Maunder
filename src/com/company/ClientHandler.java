@@ -4,41 +4,39 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Map;
 
-//ClientHandler class
 public class ClientHandler extends Thread {
-    // Declare variables
-    private Socket sock;
+    // Variables
+    private Socket s;
+    private int playerNumber;
+    private int gameScore;
     private String firstName;
     private String surname;
     private String age;
-    private int gameScore;
-    private int playerNumber;
-    private DataInputStream dis; //Declare dis as DataInputStream
-    private DataOutputStream dos; //Declare dos as DataOutputStream
+    int i = 0;
 
     private Map<Integer, quizQuestions> listOfQuestions;
 
-    int i = 0;
+    // Data input and output streams
+    DataOutputStream dos;
+    DataInputStream dis;
 
     // Constructor
     ClientHandler(Socket s, int counter, Map<Integer, quizQuestions> listOfQuestions) {
-        sock = s;
+        this.s = s;
         playerNumber = counter;
         this.gameScore = 0;
 
         this.listOfQuestions = listOfQuestions;
 
-        // Input and output streams
         try {
-            dis = new DataInputStream(sock.getInputStream());
-            dos = new DataOutputStream(sock.getOutputStream());
-
+            // Input and output streams
+            dis = new DataInputStream(this.s.getInputStream());
+            dos = new DataOutputStream(this.s.getOutputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         try {
-
             // Output
             dos.writeUTF("firstname");
             // Flush stream
@@ -47,9 +45,8 @@ public class ClientHandler extends Thread {
             // Input
             String received = dis.readUTF();
 
-            // Assigning variable first name to user input for first name
+            // Assigning variable firstname to user input
             firstName = received;
-
 
             // Output
             dos.writeUTF("surname");
@@ -59,10 +56,10 @@ public class ClientHandler extends Thread {
             // Input
             received = dis.readUTF();
 
-            // Assigning variable to user input for surname
+            // Assigning variable surname to user input
             surname = received;
 
-            // output
+            // Output
             dos.writeUTF("age");
             // Flush stream
             dos.flush();
@@ -70,12 +67,12 @@ public class ClientHandler extends Thread {
             // Input
             received = dis.readUTF();
 
-            // Assigning variable age to input for age
+            // Assigning variable age to user input
             age = received;
 
             System.out.println("Player " + firstName.substring(0, 1).toUpperCase() + firstName.substring(1) + " " + surname.substring(0, 1).toUpperCase() + surname.substring(1) + " is connected.");
 
-            // Output to allow all players to connect
+            // Output
             dos.writeUTF("waiting");
             // Flush stream
             dos.flush();
@@ -85,17 +82,61 @@ public class ClientHandler extends Thread {
         }
     }
 
+    public void run() {
+        try {
+            String clientMessage = "";
 
-    public int getScore() {
+            // Question to map
+            for (Map.Entry<Integer, quizQuestions> questionEntry : listOfQuestions.entrySet()) {
+                quizQuestions question = questionEntry.getValue();
+
+                String optionList = "";
+
+                // answer to map
+                for (Map.Entry<Integer, String> option : question.getOptions().entrySet()) {
+                    optionList += String.format("\t%d.%s\n", option.getKey(), option.getValue());
+                }
+
+                // Output question and answers
+                dos.writeUTF(String.format("%d. %s\n%s", question.getQuestionId(), question.getText(), optionList));
+                dos.flush();
+
+                // Input
+                clientMessage = dis.readUTF();
+
+                // Timeout check
+                if (!clientMessage.equals("timeout")) {
+                    if (clientMessage.equals(String.valueOf(question.getAnswerId()))) {
+                        gameScore++;
+                    }
+                }
+
+            }
+
+
+            // output
+            dos.writeUTF("done");
+            //Flush stream
+            dos.flush();
+
+        } catch (Exception ex) {
+            System.out.println(ex);
+        } finally {
+            System.out.println("Player " + playerNumber + " has finished answering.");
+        }
+    }
+
+    // Get score
+    public int getGameScore() {
         return gameScore;
     }
 
-
+    // Get player name
     public String getPlayerName() {
         return firstName.substring(0, 1).toUpperCase() + firstName.substring(1) + " " + surname.substring(0, 1).toUpperCase() + surname.substring(1);
     }
 
-
+    // Closing resources with "print" message
     public void sendFinalMessage(String message) {
         try {
             dos.writeUTF(message);
@@ -103,9 +144,10 @@ public class ClientHandler extends Thread {
 
             dis.close();
             dos.close();
-            sock.close();
+            s.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 }
